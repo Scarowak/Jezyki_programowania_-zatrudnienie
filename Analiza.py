@@ -16,39 +16,51 @@ import numpy as np
 
 ######## Wczytanie, filtrowanie danych #########
 
-df_2022=pd.read_csv("survey_results_public2022.csv") #Wczytanie danych
-
-df_2022=df_2022[df_2022['Country'] == "Poland"]  #Filtrowanie wyników dla Polski
-df_2022=df_2022[df_2022['MainBranch'] == "I am a developer by profession"] #Filtorwanie wyników, tylko profesjonalisci
-df_2022.reset_index(inplace=True, drop=True) #Reset indexów
+for i in range(19,23):
+    df_end=str(i)
 
 
-####### Stworzenie listy wszystkich języków z ankiety przy pomocy pętli #########
-
-list_2022=[]
-
-for i in range(len(df_2022)): 
-    list_2022= list_2022+(df_2022["LanguageHaveWorkedWith"][i].split(";"))
+    df_year=pd.read_csv("survey_results_public20"+df_end+".csv") #Wczytanie danych
+    
+    df_year=df_year[df_year['Country'] == "Poland"]  #Filtrowanie wyników dla Polski
+    df_year=df_year[df_year['MainBranch'] == "I am a developer by profession"] #Filtorwanie wyników, tylko profesjonalisci
+    df_year.reset_index(inplace=True, drop=True) #Reset indexów
     
     
-###### Pogrupowanie języków według liczby wystąpień w ankiecie (wsród profesjonalistów) ######
+    ####### Stworzenie listy wszystkich języków z ankiety przy pomocy pętli #########
     
-df_22 = pd.DataFrame(list_2022,columns =['Language'])  #Tworzę df z listy
-grouped_2022 = df_22.groupby("Language")["Language"].count()  #Grupuję języki i liczę wystąpienia
-grouped_2022.sort_values(inplace=True, ascending=False)  #Sortuję języki
-grouped_2022=grouped_2022[:20]   #biorę pod uwagę 20 największych języków
-grouped_2022=grouped_2022.to_frame() #Konwersja na Data_Frame
-grouped_2022.set_axis(['Count'], axis='columns', inplace=True) #Zmiana nazwy kolumny na count
-
-people_2022=len(df_2022) #Liczba ankietowanych spełniająca wymagania
-grouped_2022["Percent"]=100*grouped_2022['Count']/people_2022
-
-###### Tworzę wykres dla 20 najliczniejszych języków ######
-
-plt.bar(grouped_2022.index, grouped_2022["Percent"])
-plt.xticks(rotation=90)
-plt.title("Procent ankietowanych posługujący się danym językiem w pracy w roku 2022")
-plt.xlabel("[%]")
-plt.ylabel(["Język"])
-plt.grid(axis='y')
-plt.show()
+    list_year=[]
+    
+    for i in range(len(df_year)): 
+        try:
+            list_year= list_year+(df_year["LanguageHaveWorkedWith"][i].split(";"))
+     
+        except:
+            pass
+        
+        try: 
+            list_year= list_year+(df_year["LanguageWorkedWith"][i].split(";"))
+        except:
+            pass
+        
+    ###### Pogrupowanie języków według liczby wystąpień w ankiecie (wsród profesjonalistów) ######
+        
+    df_22 = pd.DataFrame(list_year,columns =['Language'])  #Tworzę df z listy
+    grouped_year = df_22.groupby("Language")["Language"].count()  #Grupuję języki i liczę wystąpienia
+    grouped_year.sort_values(inplace=True, ascending=False)  #Sortuję języki
+    grouped_year=grouped_year[:20]   #biorę pod uwagę 20 największych języków
+    grouped_year=grouped_year.to_frame() #Konwersja na Data_Frame
+    grouped_year.set_axis(['Count'], axis='columns', inplace=True) #Zmiana nazwy kolumny na count
+    
+    people_year=len(df_year) #Liczba ankietowanych spełniająca wymagania
+    grouped_year["Percent"]=100*grouped_year['Count']/people_year
+    
+    ###### Tworzę wykres dla 20 najliczniejszych języków ######
+    
+    plt.bar(grouped_year.index, grouped_year["Percent"])
+    plt.xticks(rotation=90)
+    plt.title("Procent ankietowanych posługujący się danym językiem w pracy w roku 20"+df_end)
+    plt.xlabel("[%]")
+    plt.ylabel(["Język"])
+    plt.grid(axis='y')
+    plt.show()
