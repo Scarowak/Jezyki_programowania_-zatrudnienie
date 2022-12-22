@@ -14,7 +14,7 @@ import numpy as np
 
 
 
-######## Wczytanie, filtrowanie danych #########
+######## Wczytanie, filtrowanie danych dla poszczególnych lat przy pomocy pętli #########
 
 for i in range(19,23):
     df_end=str(i)
@@ -64,3 +64,5 @@ for i in range(19,23):
     plt.ylabel(["Język"])
     plt.grid(axis='y')
     plt.show()
+    
+    plt.savefig('Procent ankietowanych posługujący się danym językiem w pracy w roku 20'+df_end+'.jpg',dpi=300)
